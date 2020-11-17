@@ -79,7 +79,7 @@ class IrInterpreter internal constructor(
     fun interpret(expression: IrExpression, rootFile: IrFile? = null): IrExpression {
         stack.clean(rootFile)
         return when (val returnLabel = expression.interpret().returnLabel) {
-            ReturnLabel.REGULAR -> stack.popReturnValue().toIrExpression(expression)
+            ReturnLabel.REGULAR -> stack.peekReturnValue().toIrExpression(expression)
             ReturnLabel.EXCEPTION -> {
                 val message = (stack.popReturnValue() as ExceptionState).getFullDescription()
                 IrErrorExpressionImpl(expression.startOffset, expression.endOffset, expression.type, "\n" + message)
@@ -608,12 +608,12 @@ class IrInterpreter internal constructor(
         return Next
     }
 
-    private fun interpretVariable(expression: IrVariable): ExecutionResult {
-        if (expression.initializer == null) {
-            return Next.apply { stack.addVar(Variable(expression.symbol)) }
+    private fun interpretVariable(declaration: IrVariable): ExecutionResult {
+        if (declaration.initializer == null) {
+            return Next.apply { stack.addVar(Variable(declaration.symbol)) }
         }
-        expression.initializer?.interpret()?.check { return it } //?: return Next
-        stack.addVar(Variable(expression.symbol, stack.popReturnValue()))
+        declaration.initializer?.interpret()?.check { return it } //?: return Next
+        stack.addVar(Variable(declaration.symbol, stack.popReturnValue()))
         return Next
     }
 
