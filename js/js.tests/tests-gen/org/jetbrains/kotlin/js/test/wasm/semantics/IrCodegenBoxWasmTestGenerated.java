@@ -6621,6 +6621,11 @@ public class IrCodegenBoxWasmTestGenerated extends AbstractIrCodegenBoxWasmTest 
             runTest("compiler/testData/codegen/box/inlineClasses/kt27706.kt");
         }
 
+        @TestMetadata("kt32793.kt")
+        public void testKt32793() throws Exception {
+            runTest("compiler/testData/codegen/box/inlineClasses/kt32793.kt");
+        }
+
         @TestMetadata("kt33119.kt")
         public void testKt33119() throws Exception {
             runTest("compiler/testData/codegen/box/inlineClasses/kt33119.kt");
@@ -12931,6 +12936,11 @@ public class IrCodegenBoxWasmTestGenerated extends AbstractIrCodegenBoxWasmTest 
         @TestMetadata("instanceof.kt")
         public void testInstanceof() throws Exception {
             runTest("compiler/testData/codegen/box/reified/instanceof.kt");
+        }
+
+        @TestMetadata("kt16445.kt")
+        public void testKt16445() throws Exception {
+            runTest("compiler/testData/codegen/box/reified/kt16445.kt");
         }
 
         @TestMetadata("newArrayInt.kt")

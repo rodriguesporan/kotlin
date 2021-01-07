@@ -4475,6 +4475,11 @@ public class LightAnalysisModeTestGenerated extends AbstractLightAnalysisModeTes
             runTest("compiler/testData/codegen/box/closures/kt2151.kt");
         }
 
+        @TestMetadata("kt23881.kt")
+        public void testKt23881() throws Exception {
+            runTest("compiler/testData/codegen/box/closures/kt23881.kt");
+        }
+
         @TestMetadata("kt3152.kt")
         public void testKt3152() throws Exception {
             runTest("compiler/testData/codegen/box/closures/kt3152.kt");
@@ -6540,6 +6545,11 @@ public class LightAnalysisModeTestGenerated extends AbstractLightAnalysisModeTes
     @TestDataPath("$PROJECT_ROOT")
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Coroutines extends AbstractLightAnalysisModeTest {
+        @TestMetadata("kt24135.kt")
+        public void ignoreKt24135() throws Exception {
+            runTest("compiler/testData/codegen/box/coroutines/kt24135.kt");
+        }
+
         private void runTest(String testDataFilePath) throws Exception {
             KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM, testDataFilePath);
         }
@@ -7165,6 +7175,11 @@ public class LightAnalysisModeTestGenerated extends AbstractLightAnalysisModeTes
         @TestDataPath("$PROJECT_ROOT")
         @RunWith(JUnit3RunnerWithInners.class)
         public static class ControlFlow extends AbstractLightAnalysisModeTest {
+            @TestMetadata("doWhileWithInline.kt")
+            public void ignoreDoWhileWithInline() throws Exception {
+                runTest("compiler/testData/codegen/box/coroutines/controlFlow/doWhileWithInline.kt");
+            }
+
             private void runTest(String testDataFilePath) throws Exception {
                 KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM, testDataFilePath);
             }
@@ -8490,6 +8505,11 @@ public class LightAnalysisModeTestGenerated extends AbstractLightAnalysisModeTes
             @TestDataPath("$PROJECT_ROOT")
             @RunWith(JUnit3RunnerWithInners.class)
             public static class Named extends AbstractLightAnalysisModeTest {
+                @TestMetadata("defaultArgument.kt")
+                public void ignoreDefaultArgument() throws Exception {
+                    runTest("compiler/testData/codegen/box/coroutines/localFunctions/named/defaultArgument.kt");
+                }
+
                 private void runTest(String testDataFilePath) throws Exception {
                     KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM, testDataFilePath);
                 }
@@ -13630,6 +13650,11 @@ public class LightAnalysisModeTestGenerated extends AbstractLightAnalysisModeTes
         @TestMetadata("inlineClassWithCustomEquals.kt")
         public void ignoreInlineClassWithCustomEquals() throws Exception {
             runTest("compiler/testData/codegen/box/inlineClasses/inlineClassWithCustomEquals.kt");
+        }
+
+        @TestMetadata("kt32793.kt")
+        public void ignoreKt32793() throws Exception {
+            runTest("compiler/testData/codegen/box/inlineClasses/kt32793.kt");
         }
 
         @TestMetadata("simpleSecondaryConstructor.kt")
@@ -28015,6 +28040,11 @@ public class LightAnalysisModeTestGenerated extends AbstractLightAnalysisModeTes
     @TestDataPath("$PROJECT_ROOT")
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Reified extends AbstractLightAnalysisModeTest {
+        @TestMetadata("kt16445.kt")
+        public void ignoreKt16445() throws Exception {
+            runTest("compiler/testData/codegen/box/reified/kt16445.kt");
+        }
+
         private void runTest(String testDataFilePath) throws Exception {
             KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM, testDataFilePath);
         }
