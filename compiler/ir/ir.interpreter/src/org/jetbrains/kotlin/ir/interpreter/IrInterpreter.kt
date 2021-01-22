@@ -79,7 +79,7 @@ class IrInterpreter internal constructor(
     fun interpret(expression: IrExpression, rootFile: IrFile? = null): IrExpression {
         stack.clean(rootFile)
         return when (val returnLabel = expression.interpret().returnLabel) {
-            ReturnLabel.REGULAR -> stack.peekReturnValue().toIrExpression(expression)
+            ReturnLabel.REGULAR -> stack.popReturnValue().toIrExpression(expression)
             ReturnLabel.EXCEPTION -> {
                 val message = (stack.popReturnValue() as ExceptionState).getFullDescription()
                 IrErrorExpressionImpl(expression.startOffset, expression.endOffset, expression.type, "\n" + message)
@@ -99,7 +99,7 @@ class IrInterpreter internal constructor(
         }
     }
 
-    private fun IrElement.interpret(): ExecutionResult {
+    internal fun IrElement.interpret(): ExecutionResult {
         try {
             incrementAndCheckCommands()
             val executionResult = when (this) {
@@ -107,7 +107,7 @@ class IrInterpreter internal constructor(
                 is IrCall -> interpretCall(this)
                 is IrConstructorCall -> interpretConstructorCall(this)
                 is IrEnumConstructorCall -> interpretEnumConstructorCall(this)
-                is IrDelegatingConstructorCall -> interpretDelegatedConstructorCall(this)
+                is IrDelegatingConstructorCall -> interpretDelegatingConstructorCall(this)
                 is IrInstanceInitializerCall -> interpretInstanceInitializerCall(this)
                 is IrBody -> interpretBody(this)
                 is IrBlock -> interpretBlock(this)
@@ -447,7 +447,7 @@ class IrInterpreter internal constructor(
         return interpretConstructor(enumConstructorCall)
     }
 
-    private fun interpretDelegatedConstructorCall(delegatingConstructorCall: IrDelegatingConstructorCall): ExecutionResult {
+    private fun interpretDelegatingConstructorCall(delegatingConstructorCall: IrDelegatingConstructorCall): ExecutionResult {
         if (delegatingConstructorCall.symbol.owner.parent == irBuiltIns.anyClass.owner) {
             val anyAsStateObject = Common(irBuiltIns.anyClass.owner)
             stack.pushReturnValue(anyAsStateObject)

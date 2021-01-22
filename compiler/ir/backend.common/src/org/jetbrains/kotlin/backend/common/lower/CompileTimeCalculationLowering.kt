@@ -65,7 +65,7 @@ class CompileTimeCalculationLowering(val context: CommonBackendContext) : FileLo
             if (expression.accept(IrCompileTimeChecker(), null)) {
                 return interpreter.interpret(expression, irFile).report(expression)
             }
-            return expression
+            return super.visitCall(expression)
         }
 
         override fun visitField(declaration: IrField): IrStatement {
