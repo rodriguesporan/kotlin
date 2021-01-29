@@ -291,7 +291,7 @@ public final class kotlin/UByteArray : java/util/Collection, kotlin/jvm/internal
 	public fun clear ()V
 	public static fun constructor-impl (I)[B
 	public static fun constructor-impl ([B)[B
-	public final fun contains (Ljava/lang/Object;)Z
+	public synthetic fun contains (Ljava/lang/Object;)Z
 	public fun contains-7apg3OU (B)Z
 	public static fun contains-7apg3OU ([BB)Z
 	public fun containsAll (Ljava/util/Collection;)Z
@@ -313,7 +313,7 @@ public final class kotlin/UByteArray : java/util/Collection, kotlin/jvm/internal
 	public fun removeAll (Ljava/util/Collection;)Z
 	public fun retainAll (Ljava/util/Collection;)Z
 	public static final fun set-VurrAj0 ([BIB)V
-	public final fun size ()I
+	public synthetic fun size ()I
 	public fun toArray ()[Ljava/lang/Object;
 	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
 	public fun toString ()Ljava/lang/String;
@@ -351,7 +351,7 @@ public final class kotlin/UIntArray : java/util/Collection, kotlin/jvm/internal/
 	public fun clear ()V
 	public static fun constructor-impl (I)[I
 	public static fun constructor-impl ([I)[I
-	public final fun contains (Ljava/lang/Object;)Z
+	public synthetic fun contains (Ljava/lang/Object;)Z
 	public fun contains-WZ4Q5Ns (I)Z
 	public static fun contains-WZ4Q5Ns ([II)Z
 	public fun containsAll (Ljava/util/Collection;)Z
@@ -373,7 +373,7 @@ public final class kotlin/UIntArray : java/util/Collection, kotlin/jvm/internal/
 	public fun removeAll (Ljava/util/Collection;)Z
 	public fun retainAll (Ljava/util/Collection;)Z
 	public static final fun set-VXSXFK8 ([III)V
-	public final fun size ()I
+	public synthetic fun size ()I
 	public fun toArray ()[Ljava/lang/Object;
 	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
 	public fun toString ()Ljava/lang/String;
@@ -411,7 +411,7 @@ public final class kotlin/ULongArray : java/util/Collection, kotlin/jvm/internal
 	public fun clear ()V
 	public static fun constructor-impl (I)[J
 	public static fun constructor-impl ([J)[J
-	public final fun contains (Ljava/lang/Object;)Z
+	public synthetic fun contains (Ljava/lang/Object;)Z
 	public fun contains-VKZWuLQ (J)Z
 	public static fun contains-VKZWuLQ ([JJ)Z
 	public fun containsAll (Ljava/util/Collection;)Z
@@ -433,7 +433,7 @@ public final class kotlin/ULongArray : java/util/Collection, kotlin/jvm/internal
 	public fun removeAll (Ljava/util/Collection;)Z
 	public fun retainAll (Ljava/util/Collection;)Z
 	public static final fun set-k8EXiF4 ([JIJ)V
-	public final fun size ()I
+	public synthetic fun size ()I
 	public fun toArray ()[Ljava/lang/Object;
 	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
 	public fun toString ()Ljava/lang/String;
@@ -471,7 +471,7 @@ public final class kotlin/UShortArray : java/util/Collection, kotlin/jvm/interna
 	public fun clear ()V
 	public static fun constructor-impl (I)[S
 	public static fun constructor-impl ([S)[S
-	public final fun contains (Ljava/lang/Object;)Z
+	public synthetic fun contains (Ljava/lang/Object;)Z
 	public fun contains-xj2QHRw (S)Z
 	public static fun contains-xj2QHRw ([SS)Z
 	public fun containsAll (Ljava/util/Collection;)Z
@@ -493,7 +493,7 @@ public final class kotlin/UShortArray : java/util/Collection, kotlin/jvm/interna
 	public fun removeAll (Ljava/util/Collection;)Z
 	public fun retainAll (Ljava/util/Collection;)Z
 	public static final fun set-01HTLdE ([SIS)V
-	public final fun size ()I
+	public synthetic fun size ()I
 	public fun toArray ()[Ljava/lang/Object;
 	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
 	public fun toString ()Ljava/lang/String;
