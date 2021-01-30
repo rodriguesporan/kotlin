@@ -13,6 +13,7 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.Key
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.util.CommonProcessors
 import com.intellij.util.containers.MultiMap
@@ -57,6 +58,7 @@ abstract class AbstractKotlinHighlightingPass(file: KtFile, document: Document) 
         // annotate diagnostics on fly: show diagnostics as soon as front-end reports them
         // don't create quick fixes as it could require some resolve
         val annotationByDiagnostic = mutableMapOf<Diagnostic, Annotation>()
+        val annotationByTextRange = mutableMapOf<TextRange, Annotation>()
 
         // render of on-fly diagnostics with descriptors could lead to recursion
         fun checkIfDescriptor(candidate: Any?): Boolean =
@@ -69,12 +71,14 @@ abstract class AbstractKotlinHighlightingPass(file: KtFile, document: Document) 
                                                       it !in annotationByDiagnostic &&
                                                       !RenderingContext.parameters(it).any(::checkIfDescriptor)
                                                   ) {
-                                                      annotateDiagnostic(element, holder, it, annotationByDiagnostic)
+                                                      annotateDiagnostic(element, holder, it, annotationByDiagnostic, annotationByTextRange)
                                                   }
                                               }).also { it.throwIfError() }
         // resolve is done!
 
         val bindingContext = analysisResult.bindingContext
+
+        cleanUpCalculatingAnnotations(annotationByTextRange)
         // TODO: for some reasons it could be duplicated diagnostics for the same factory
         //  see [PsiCheckerTestGenerated$Checker.testRedeclaration]
         val diagnostics = bindingContext.diagnostics.asSequence().filter { it.psiElement in elements }.toSet()
@@ -82,7 +86,7 @@ abstract class AbstractKotlinHighlightingPass(file: KtFile, document: Document) 
         if (diagnostics.isNotEmpty()) {
             // annotate diagnostics those were not possible to render on fly
             diagnostics.asSequence().filterNot { it in annotationByDiagnostic }.forEach {
-                annotateDiagnostic(it.psiElement, holder, it, annotationByDiagnostic)
+                annotateDiagnostic(it.psiElement, holder, it, annotationByDiagnostic, calculatingInProgress = false)
             }
             // apply quick fixes for all diagnostics grouping by element
             diagnostics.groupBy(Diagnostic::psiElement).forEach {
@@ -97,15 +101,31 @@ abstract class AbstractKotlinHighlightingPass(file: KtFile, document: Document) 
         holder: AnnotationHolder,
         diagnostic: Diagnostic,
         annotationByDiagnostic: MutableMap<Diagnostic, Annotation>? = null,
-    ) = annotateDiagnostics(element, holder, listOf(diagnostic), annotationByDiagnostic, true)
+        annotationByTextRange: MutableMap<TextRange, Annotation>? = null,
+        calculatingInProgress: Boolean = true
+    ) = annotateDiagnostics(element, holder, listOf(diagnostic), annotationByDiagnostic, annotationByTextRange, true, calculatingInProgress)
+
+    private fun cleanUpCalculatingAnnotations(annotationByTextRange: Map<TextRange, Annotation>) {
+        annotationByTextRange.values.forEach { annotation ->
+            annotation.quickFixes?.removeIf {
+                it.quickFix is CalculatingIntentionAction
+            }
+        }
+    }
 
     private fun annotateDiagnostics(
         element: PsiElement,
         holder: AnnotationHolder,
         diagnostics: List<Diagnostic>,
         annotationByDiagnostic: MutableMap<Diagnostic, Annotation>? = null,
-        noFixes: Boolean = false
-    ) = annotateDiagnostics(file, element, holder, diagnostics, annotationByDiagnostic, ::shouldSuppressUnusedParameter, noFixes)
+        annotationByTextRange: MutableMap<TextRange, Annotation>? = null,
+        noFixes: Boolean = false,
+        calculatingInProgress: Boolean = false
+    ) = annotateDiagnostics(
+        file, element, holder, diagnostics, annotationByDiagnostic, annotationByTextRange,
+        ::shouldSuppressUnusedParameter,
+        noFixes = noFixes, calculatingInProgress = calculatingInProgress
+    )
 
     /**
      * [diagnostics] has to belong to the same element
@@ -158,8 +178,10 @@ abstract class AbstractKotlinHighlightingPass(file: KtFile, document: Document) 
             holder: AnnotationHolder,
             diagnostics: Collection<Diagnostic>,
             annotationByDiagnostic: MutableMap<Diagnostic, Annotation>? = null,
+            annotationByTextRange: MutableMap<TextRange, Annotation>? = null,
             shouldSuppressUnusedParameter: (KtParameter) -> Boolean = { false },
-            noFixes: Boolean = false
+            noFixes: Boolean = false,
+            calculatingInProgress: Boolean = false
         ) {
             if (diagnostics.isEmpty()) return
 
@@ -179,7 +201,11 @@ abstract class AbstractKotlinHighlightingPass(file: KtFile, document: Document) 
                 val elementAnnotator = ElementAnnotator(element) { param ->
                     shouldSuppressUnusedParameter(param)
                 }
-                elementAnnotator.registerDiagnosticsAnnotations(holder, diagnostics, annotationByDiagnostic, noFixes)
+                elementAnnotator.registerDiagnosticsAnnotations(
+                    holder, diagnostics, annotationByDiagnostic,
+                    annotationByTextRange,
+                    noFixes = noFixes, calculatingInProgress = calculatingInProgress
+                )
             }
         }
     }
